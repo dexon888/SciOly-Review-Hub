@@ -1,0 +1,8 @@
+<div *ngIf="topic">
+    <h2>Generate a Quiz Question for {{ topic | titlecase }}</h2>
+    <button (click)="generateQuestion()">Generate Question</button>
+    <app-question-display *ngIf="question" [question]="question"></app-question-display>
+</div>
+<div *ngIf="!topic">
+    <p>Select a topic from the home page.</p>
+</div>
