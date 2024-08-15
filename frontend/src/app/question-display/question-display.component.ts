@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,6 +9,13 @@ import { CommonModule } from '@angular/common';
   templateUrl: './question-display.component.html',
   styleUrls: ['./question-display.component.css']
 })
-export class QuestionDisplayComponent {
-  @Input() question: string | null = null;
+export class QuestionDisplayComponent implements OnInit {
+  quiz: string[] | null = null;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    const navigation = this.router.getCurrentNavigation();
+    this.quiz = navigation?.extras?.state?.['quiz'] || null;
+  }
 }

@@ -17,14 +17,28 @@ def read_root():
     return {"message": "Welcome to the Science Olympiad Quiz API"}
 
 
-@app.post("/generate-question")
-async def generate_question(topic: str):
+@app.post("/generate-quiz")
+async def generate_quiz(topic: str, mcqCount: int, srqCount: int):
     if topic not in topics:
         raise HTTPException(status_code=400, detail="Invalid topic")
+
+    quiz = []
     prompt = topics[topic]
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        max_tokens=100
-    )
-    return {"question": response.choices[0].text}
+
+    for _ in range(mcqCount):
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=f"{prompt}\nType: Multiple Choice",
+            max_tokens=100
+        )
+        quiz.append(response.choices[0].text)
+
+    for _ in range(srqCount):
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=f"{prompt}\nType: Short Response",
+            max_tokens=100
+        )
+        quiz.append(response.choices[0].text)
+
+    return {"quiz": quiz}

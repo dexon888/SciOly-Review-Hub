@@ -1,40 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ApiService } from '../api.service';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { QuestionDisplayComponent } from '../question-display/question-display.component';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-question-generator',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, RouterModule, FormsModule, QuestionDisplayComponent],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './question-generator.component.html',
-  styleUrls: ['./question-generator.component.css']
+  styleUrls: ['./question-generator.component.css'],
+  providers: [TitleCasePipe]
 })
 export class QuestionGeneratorComponent implements OnInit {
   topic: string | null = null;
-  question: string | null = null;
+  mcqCount: number = 0;
+  srqCount: number = 0;
 
-  constructor(private route: ActivatedRoute, private apiService: ApiService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private apiService: ApiService,
+    private titleCasePipe: TitleCasePipe
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.topic = params.get('topic');
-      this.question = null; // Reset the question when topic changes
+      if (this.topic) {
+        this.topic = this.titleCasePipe.transform(this.topic);
+      }
     });
   }
 
-  generateQuestion(): void {
+  generateQuiz(): void {
     if (this.topic) {
-      this.apiService.generateQuestion(this.topic).subscribe(
+      this.apiService.generateQuiz(this.topic, this.mcqCount, this.srqCount).subscribe(
         (response: any) => {
-          this.question = response.question;
+          this.router.navigate(['/quiz-display'], { state: { quiz: response.quiz } });
         },
         (error: any) => {
-          console.error('Error generating question:', error);
+          console.error('Error generating quiz:', error);
         }
       );
     }

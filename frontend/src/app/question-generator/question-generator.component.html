@@ -1,8 +1,12 @@
 <div *ngIf="topic">
-    <h2>Generate a Quiz Question for {{ topic | titlecase }}</h2>
-    <button (click)="generateQuestion()">Generate Question</button>
-    <app-question-display *ngIf="question" [question]="question"></app-question-display>
-</div>
-<div *ngIf="!topic">
-    <p>Select a topic from the home page.</p>
+    <h2>Generate a Quiz for {{ topic }}</h2>
+    <form (ngSubmit)="generateQuiz()">
+        <label for="mcqCount">Number of Multiple Choice Questions:</label>
+        <input type="number" id="mcqCount" [(ngModel)]="mcqCount" name="mcqCount" required>
+
+        <label for="srqCount">Number of Short Response Questions:</label>
+        <input type="number" id="srqCount" [(ngModel)]="srqCount" name="srqCount" required>
+
+        <button type="submit">Generate Quiz</button>
+    </form>
 </div>

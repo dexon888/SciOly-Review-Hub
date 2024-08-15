@@ -10,7 +10,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  generateQuestion(topic: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/generate-question`, { topic });
+  generateQuiz(topic: string, mcqCount: number, srqCount: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/generate-quiz`, { topic, mcqCount, srqCount });
   }
 }
