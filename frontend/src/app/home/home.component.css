@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.event-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+mat-card {
+    width: 400px;
+}

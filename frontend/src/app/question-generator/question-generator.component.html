@@ -1,12 +1,20 @@
-<div *ngIf="topic">
-    <h2>Generate a Quiz for {{ topic }}</h2>
-    <form (ngSubmit)="generateQuiz()">
-        <label for="mcqCount">Number of Multiple Choice Questions:</label>
-        <input type="number" id="mcqCount" [(ngModel)]="mcqCount" name="mcqCount" required>
-
-        <label for="srqCount">Number of Short Response Questions:</label>
-        <input type="number" id="srqCount" [(ngModel)]="srqCount" name="srqCount" required>
-
-        <button type="submit">Generate Quiz</button>
-    </form>
+<div class="container" *ngIf="topic">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Generate a Quiz for {{ topic }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form (ngSubmit)="generateQuiz()">
+                <mat-form-field appearance="fill">
+                    <mat-label>Number of Multiple Choice Questions</mat-label>
+                    <input matInput type="number" [(ngModel)]="mcqCount" name="mcqCount" required>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Number of Short Response Questions</mat-label>
+                    <input matInput type="number" [(ngModel)]="srqCount" name="srqCount" required>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit">Generate Quiz</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
 </div>
