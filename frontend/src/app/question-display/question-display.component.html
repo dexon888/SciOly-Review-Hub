@@ -1,9 +1,10 @@
-<div *ngIf="quiz; else noData">
-    <div *ngFor="let question of quiz">
-        <p>{{ question }}</p>
+<div *ngFor="let item of quiz">
+    <div *ngIf="item.type === 'multiple_choice'">
+        <p>{{ item.question }}</p>
+        <!-- You can add more specific HTML for MCQ options here -->
+    </div>
+    <div *ngIf="item.type === 'short_response'">
+        <p>{{ item.question }}</p>
+        <input type="text" placeholder="Your answer here">
     </div>
 </div>
-
-<ng-template #noData>
-    <p>No quiz data available</p>
-</ng-template>

@@ -38,17 +38,15 @@ export class QuestionGeneratorComponent implements OnInit {
   }
 
   generateQuiz(): void {
-  if (this.topic) {
-    this.apiService.generateQuiz(this.topic, this.mcqCount, this.srqCount).subscribe(
-      (response: any) => {
-        this.router.navigate(['/quiz-display'], { state: { quiz: response.quiz } });
-      },
-      (error: any) => {
-        console.error('Error generating quiz:', error);
-      }
-    );
+    if (this.topic) {
+      this.apiService.generateQuiz(this.topic, this.mcqCount, this.srqCount).subscribe(
+        (response: any) => {
+          this.router.navigate(['/quiz-display'], { state: { quiz: response.quiz } });
+        },
+        (error: any) => {
+          console.error('Error generating quiz:', error);
+        }
+      );
+    }
   }
-}
-
-
 }

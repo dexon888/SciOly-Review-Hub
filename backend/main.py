@@ -69,7 +69,10 @@ async def generate_quiz(request: QuizRequest):
             ],
             max_tokens=100
         )
-        quiz.append(response['choices'][0]['message']['content'].strip())
+        quiz.append({
+            "type": "multiple_choice",
+            "question": response['choices'][0]['message']['content'].strip()
+        })
 
     # Generate short response questions
     for _ in range(request.srqCount):
@@ -81,6 +84,9 @@ async def generate_quiz(request: QuizRequest):
             ],
             max_tokens=100
         )
-        quiz.append(response['choices'][0]['message']['content'].strip())
+        quiz.append({
+            "type": "short_response",
+            "question": response['choices'][0]['message']['content'].strip()
+        })
 
     return {"quiz": quiz}

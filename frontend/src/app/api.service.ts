@@ -11,6 +11,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   generateQuiz(topic: string, mcqCount: number, srqCount: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/generate-quiz`, { topic, mcqCount, srqCount });
-  }
+  return this.http.post<any>(`${this.apiUrl}/generate-quiz`, { topic, mcqCount, srqCount });
+}
+
 }

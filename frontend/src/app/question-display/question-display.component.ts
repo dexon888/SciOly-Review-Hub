@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+interface QuizItem {
+  type: string;
+  question: string;
+}
+
 @Component({
   selector: 'app-question-display',
   standalone: true,
@@ -10,7 +15,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class QuestionDisplayComponent {
-  quiz: string[] | null = null;
+  quiz: QuizItem[] | null = null;
 
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
