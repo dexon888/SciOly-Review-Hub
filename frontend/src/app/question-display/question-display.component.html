@@ -6,8 +6,8 @@
         <!-- Multiple Choice Questions -->
         <div *ngIf="item.type === 'multiple_choice' && item.options">
             <div *ngFor="let option of item.options">
-                <label [ngClass]="{'correct': item.isCorrect && option === item.correctAnswer, 
-                          'incorrect': !item.isCorrect && option === item.selectedOption}">
+                <label
+                    [ngClass]="{'correct': isSubmitted && option === item.correctAnswer, 'incorrect': isSubmitted && option === item.selectedOption && option !== item.correctAnswer}">
                     <input type="radio" name="question{{i}}" [(ngModel)]="item.selectedOption" [value]="option">
                     {{ option }}
                 </label>
@@ -20,7 +20,7 @@
         </div>
 
         <!-- Feedback after submission -->
-        <div *ngIf="item.isCorrect !== undefined">
+        <div *ngIf="isSubmitted && item.type === 'multiple_choice'">
             <p [ngClass]="{'correct': item.isCorrect, 'incorrect': !item.isCorrect}">
                 {{ item.isCorrect ? 'Correct!' : 'Incorrect. The correct answer is ' + item.correctAnswer }}
             </p>

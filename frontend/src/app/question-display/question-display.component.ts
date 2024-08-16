@@ -3,18 +3,18 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for two-way binding
 
+// Define the QuizItem interface if it's not defined elsewhere
 interface QuizItem {
   type: string;
   question: string;
   options?: string[];  // Array of options for multiple-choice questions
   selectedOption?: string;  // To store the selected answer
-  correctAnswer?: string;  // To store the correct answer
+  correctAnswer?: string;  // The correct answer for the question
+  isCorrect?: boolean;  // To indicate if the selected answer is correct
   explanationRequired?: boolean;  // Flag if explanation is needed
   explanation?: string;  // For storing the user's explanation
   answer?: string;  // For short response questions
-  isCorrect?: boolean;  // To store if the selected option is correct or not
 }
-
 
 @Component({
   selector: 'app-question-display',
@@ -26,12 +26,13 @@ interface QuizItem {
 export class QuestionDisplayComponent implements OnInit {
   quiz: QuizItem[] | null = null;
   topic: string | null = null;
+  isSubmitted: boolean = false;
 
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
-      this.quiz = navigation.extras.state['quiz'] || null;
-      this.topic = navigation.extras?.state?.['topic'] || 'Quiz';  // Assuming 'topic' is passed
+      this.quiz = navigation.extras?.state?.['quiz'] || null;
+      this.topic = navigation.extras?.state?.['topic'] || 'Quiz';
       this.topic = this.topic ? this.capitalizeFirstLetter(this.topic) : null;
     }
   }
@@ -43,15 +44,34 @@ export class QuestionDisplayComponent implements OnInit {
   ngOnInit(): void {}
 
   submitQuiz(): void {
-  if (this.quiz) {
-    this.quiz.forEach((item) => {
-      if (item.type === 'multiple_choice' && item.selectedOption && item.correctAnswer) {
-        item.isCorrect = item.selectedOption === item.correctAnswer;
-      }
-    });
+    this.isSubmitted = true;
+    if (this.quiz) {
+      this.quiz.forEach((item) => {
+        if (item.type === 'multiple_choice') {
+          item.isCorrect = item.selectedOption === item.correctAnswer;
+        }
+      });
+    }
     console.log('Submitted Quiz:', this.quiz);
-    // Handle further logic, like sending results to the backend or displaying them to the user
   }
-}
 
+  selectAnswer(questionIndex: number, answer: string): void {
+    if (this.quiz && !this.isSubmitted) {
+      this.quiz[questionIndex].selectedOption = answer;
+    }
+  }
+
+  getAnswerClass(questionIndex: number, answer: string): string {
+    if (!this.isSubmitted) return '';
+
+    const question = this.quiz ? this.quiz[questionIndex] : null;
+    if (!question) return '';
+
+    if (answer === question.correctAnswer) {
+      return 'correct';
+    } else if (answer === question.selectedOption) {
+      return 'incorrect';
+    }
+    return '';
+  }
 }
