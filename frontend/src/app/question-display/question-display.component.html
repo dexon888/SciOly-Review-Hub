@@ -1,14 +1,26 @@
 <div class="quiz-container">
-    <h1>{{ topic }} Quiz</h1> <!-- Topic title -->
-    <div *ngFor="let item of quiz">
-        <div class="question-card" *ngIf="item.type === 'multiple_choice'">
+    <h1>{{ topic }} Quiz</h1>
+
+    <div *ngFor="let item of quiz" class="question-card">
+        <div *ngIf="item.type === 'multiple_choice'">
             <p>{{ item.question }}</p>
-            <!-- Add HTML for multiple choice options if needed -->
+            <div *ngFor="let option of item.options">
+                <label>
+                    <input type="radio" name="mcq-{{item.question}}" [(ngModel)]="item.selectedOption" [value]="option">
+                    {{ option }}
+                </label>
+            </div>
+            <div *ngIf="item.explanationRequired">
+                <label for="explanation-{{item.question}}">Provide a brief explanation for your choice:</label>
+                <textarea id="explanation-{{item.question}}" [(ngModel)]="item.explanation"></textarea>
+            </div>
         </div>
-        <div class="question-card" *ngIf="item.type === 'short_response'">
+
+        <div *ngIf="item.type === 'short_response'">
             <p>{{ item.question }}</p>
-            <input type="text" placeholder="Your answer here">
+            <input type="text" [(ngModel)]="item.answer" placeholder="Your answer here">
         </div>
     </div>
-    <button (click)="submitQuiz()">Submit</button> <!-- Submit button -->
+
+    <button class="submit-btn" (click)="submitQuiz()">Submit Quiz</button>
 </div>

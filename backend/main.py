@@ -85,15 +85,27 @@ async def generate_quiz(request: QuizRequest):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",
-                    "content": "You are a quiz generator for Science Olympiad."},
+                {"role": "system", "content": "You are a quiz generator."},
                 {"role": "user", "content": f"{prompt}\nType: Multiple Choice"},
             ],
-            max_tokens=150  # Increased tokens for more detailed questions
+            max_tokens=150
         )
+        question_content = response['choices'][0]['message']['content'].strip()
+
+        # Remove any part of the text that could contain an answer or explanation
+        possible_clues = ["Correct Answer:", "Answer:", "Explanation:", "Correct:",
+                          "Explanation", "answer is", "Correct choice", "Answer is", "The correct"]
+
+        for clue in possible_clues:
+            question_content = question_content.split(clue)[0]
+
+        # Assuming that options are in the format A), B), C), D)
+        options = extract_options(question_content)
+
         quiz.append({
             "type": "multiple_choice",
-            "question": response['choices'][0]['message']['content'].strip()
+            "question": question_content.strip(),
+            "options": options
         })
 
     # Generate short response questions
@@ -101,11 +113,10 @@ async def generate_quiz(request: QuizRequest):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system",
-                    "content": "You are a quiz generator for Science Olympiad."},
+                {"role": "system", "content": "You are a quiz generator."},
                 {"role": "user", "content": f"{prompt}\nType: Short Response"},
             ],
-            max_tokens=150  # Increased tokens for more detailed questions
+            max_tokens=150
         )
         quiz.append({
             "type": "short_response",
@@ -113,3 +124,13 @@ async def generate_quiz(request: QuizRequest):
         })
 
     return {"quiz": quiz}
+
+
+
+def extract_options(content: str) -> list:
+    # Assuming options are in the format A) B) C) D)
+    options = []
+    for line in content.splitlines():
+        if line.strip() and line[0] in 'ABCD':
+            options.append(line.strip())
+    return options
