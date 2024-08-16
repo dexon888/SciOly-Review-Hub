@@ -1,10 +1,14 @@
-<div *ngFor="let item of quiz">
-    <div class="question-card" *ngIf="item.type === 'multiple_choice'">
-        <p>{{ item.question }}</p>
-        <!-- You can add more specific HTML for MCQ options here -->
+<div class="quiz-container">
+    <h1>{{ topic }} Quiz</h1> <!-- Topic title -->
+    <div *ngFor="let item of quiz">
+        <div class="question-card" *ngIf="item.type === 'multiple_choice'">
+            <p>{{ item.question }}</p>
+            <!-- Add HTML for multiple choice options if needed -->
+        </div>
+        <div class="question-card" *ngIf="item.type === 'short_response'">
+            <p>{{ item.question }}</p>
+            <input type="text" placeholder="Your answer here">
+        </div>
     </div>
-    <div class="question-card" *ngIf="item.type === 'short_response'">
-        <p>{{ item.question }}</p>
-        <input type="text" placeholder="Your answer here">
-    </div>
+    <button (click)="submitQuiz()">Submit</button> <!-- Submit button -->
 </div>

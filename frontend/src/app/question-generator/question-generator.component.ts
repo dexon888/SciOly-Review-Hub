@@ -41,7 +41,7 @@ export class QuestionGeneratorComponent implements OnInit {
     if (this.topic) {
       this.apiService.generateQuiz(this.topic, this.mcqCount, this.srqCount).subscribe(
         (response: any) => {
-          this.router.navigate(['/quiz-display'], { state: { quiz: response.quiz } });
+          this.router.navigate(['/quiz-display'], { state: { quiz: response.quiz, topic: this.topic } });
         },
         (error: any) => {
           console.error('Error generating quiz:', error);

@@ -36,13 +36,34 @@ class QuizRequest(BaseModel):
     srqCount: int
 
 
-# Define the topics and prompts
+# Define the topics and tailored prompts for Science Olympiad events
 topics = {
-    "anatomy-physiology": "Generate a multiple choice question about human anatomy and physiology.",
-    "fossils": "Generate a multiple choice question about fossils.",
-    "forestry": "Generate a multiple choice question about forestry.",
-    "astronomy": "Generate a multiple choice question about astronomy.",
-    "disease-detectives": "Generate a multiple choice question about epidemiology and disease detection."
+    "anatomy-physiology": (
+        "Generate a challenging, high-school level multiple choice or short response question "
+        "on the anatomy and physiology of the cardiovascular, lymphatic, and excretory systems, "
+        "including advanced topics such as ECG/EKG interpretation, effects of drugs on cardiac physiology, "
+        "and detailed anatomical knowledge. This question should be suitable for a Science Olympiad competition."
+    ),
+    "fossils": (
+        "Generate a difficult question about fossils that requires knowledge of fossil identification, "
+        "preservation modes, and evolutionary significance, with a focus on the use of fossils in dating "
+        "and correlating rock units. The question should challenge high-school level students in a Science Olympiad competition."
+    ),
+    "forestry": (
+        "Create a complex question about forestry that tests knowledge of tree identification, ecological characteristics, "
+        "and forest management practices. The question should also consider economic aspects of trees and be suitable "
+        "for advanced high school students participating in a Science Olympiad competition."
+    ),
+    "astronomy": (
+        "Generate a rigorous question about stellar evolution, exoplanet detection, or orbital mechanics, requiring detailed "
+        "knowledge and data interpretation. The question should challenge students with concepts like Hertzsprung-Russell diagrams, "
+        "Kepler’s laws, and multi-wavelength astronomy, appropriate for a Science Olympiad competition."
+    ),
+    "disease-detectives": (
+        "Generate a difficult question on epidemiology and disease detection, focusing on outbreak investigation, "
+        "data interpretation, and the application of epidemiological principles. The question should be at a level "
+        "appropriate for high school students in a Science Olympiad competition."
+    )
 }
 
 
@@ -64,10 +85,11 @@ async def generate_quiz(request: QuizRequest):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a quiz generator."},
+                {"role": "system",
+                    "content": "You are a quiz generator for Science Olympiad."},
                 {"role": "user", "content": f"{prompt}\nType: Multiple Choice"},
             ],
-            max_tokens=100
+            max_tokens=150  # Increased tokens for more detailed questions
         )
         quiz.append({
             "type": "multiple_choice",
@@ -79,10 +101,11 @@ async def generate_quiz(request: QuizRequest):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a quiz generator."},
+                {"role": "system",
+                    "content": "You are a quiz generator for Science Olympiad."},
                 {"role": "user", "content": f"{prompt}\nType: Short Response"},
             ],
-            max_tokens=100
+            max_tokens=150  # Increased tokens for more detailed questions
         )
         quiz.append({
             "type": "short_response",
