@@ -4,22 +4,18 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-question-display',
-  standalone: true,  // Ensure this is a standalone component
+  standalone: true,
   templateUrl: './question-display.component.html',
   styleUrls: ['./question-display.component.css'],
-  imports: [CommonModule]  // Import CommonModule here
+  imports: [CommonModule]
 })
-export class QuestionDisplayComponent implements OnInit {
+export class QuestionDisplayComponent {
   quiz: string[] | null = null;
 
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {
+  constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       this.quiz = navigation.extras.state['quiz'] || null;
     }
-
-    console.log('Quiz data:', this.quiz);
   }
 }

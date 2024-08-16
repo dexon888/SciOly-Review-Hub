@@ -1,12 +1,17 @@
+from dotenv import load_dotenv
+import os
 import openai
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI()
+# Load environment variables from .env file
+load_dotenv()
 
-# Set your OpenAI API key here
-openai.api_key = "sk-vxlkECiV8zupsDGNpMaplu4iEss_LWoqzTL5l4-WgeT3BlbkFJg1EoanQ-Qp2yL49f36T96XT2geSk6yHXGNRuRMowcA"
+# Get the OpenAI API key from environment variable
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+app = FastAPI()
 
 # Define the CORS policy
 origins = [

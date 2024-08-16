@@ -1,9 +1,9 @@
-<div *ngIf="quiz">
-    <h2>Generated Quiz</h2>
-    <ul>
-        <li *ngFor="let question of quiz">{{ question }}</li>
-    </ul>
+<div *ngIf="quiz; else noData">
+    <div *ngFor="let question of quiz">
+        <p>{{ question }}</p>
+    </div>
 </div>
-<div *ngIf="!quiz">
-    <p>No quiz data available.</p>
-</div>
+
+<ng-template #noData>
+    <p>No quiz data available</p>
+</ng-template>
