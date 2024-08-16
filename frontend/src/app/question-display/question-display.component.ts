@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for two-way binding
 
-// Define the QuizItem interface if it's not defined elsewhere
 interface QuizItem {
   type: string;
   question: string;
@@ -11,9 +10,7 @@ interface QuizItem {
   selectedOption?: string;  // To store the selected answer
   correctAnswer?: string;  // The correct answer for the question
   isCorrect?: boolean;  // To indicate if the selected answer is correct
-  explanationRequired?: boolean;  // Flag if explanation is needed
-  explanation?: string;  // For storing the user's explanation
-  answer?: string;  // For short response questions
+  explanation?: string;  // To store the explanation
 }
 
 @Component({

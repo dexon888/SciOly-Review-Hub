@@ -40,35 +40,63 @@ class QuizRequest(BaseModel):
 # Define the topics and tailored prompts for Science Olympiad events
 topics = {
     "anatomy-physiology": (
-        "Generate a challenging, high-school level multiple choice or short response question "
+        "Generate a challenging, high-school level multiple choice question "
         "on the anatomy and physiology of the cardiovascular, lymphatic, and excretory systems, "
         "including advanced topics such as ECG/EKG interpretation, effects of drugs on cardiac physiology, "
-        "and detailed anatomical knowledge. This question should be suitable for a Science Olympiad competition."
-        " The correct answer should be included at the end of the response in the format 'Correct Answer: [A/B/C/D]'."
+        "and detailed anatomical knowledge. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
     ),
     "fossils": (
-        "Generate a difficult question about fossils that requires knowledge of fossil identification, "
+        "Generate a difficult multiple choice question about fossils that requires knowledge of fossil identification, "
         "preservation modes, and evolutionary significance, with a focus on the use of fossils in dating "
-        "and correlating rock units. The question should challenge high-school level students in a Science Olympiad competition."
-        " The correct answer should be included at the end of the response in the format 'Correct Answer: [A/B/C/D]'."
+        "and correlating rock units. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
     ),
     "forestry": (
-        "Create a complex question about forestry that tests knowledge of tree identification, ecological characteristics, "
-        "and forest management practices. The question should also consider economic aspects of trees and be suitable "
-        "for advanced high school students participating in a Science Olympiad competition."
-        " The correct answer should be included at the end of the response in the format 'Correct Answer: [A/B/C/D]'."
+        "Create a complex multiple choice question about forestry that tests knowledge of tree identification, ecological characteristics, "
+        "and forest management practices. The question should also consider economic aspects of trees. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
     ),
     "astronomy": (
-        "Generate a rigorous question about stellar evolution, exoplanet detection, or orbital mechanics, requiring detailed "
+        "Generate a rigorous multiple choice question about stellar evolution, exoplanet detection, or orbital mechanics, requiring detailed "
         "knowledge and data interpretation. The question should challenge students with concepts like Hertzsprung-Russell diagrams, "
-        "Kepler’s laws, and multi-wavelength astronomy, appropriate for a Science Olympiad competition."
-        " The correct answer should be included at the end of the response in the format 'Correct Answer: [A/B/C/D]'."
+        "Kepler’s laws, and multi-wavelength astronomy. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
     ),
     "disease-detectives": (
-        "Generate a difficult question on epidemiology and disease detection, focusing on outbreak investigation, "
-        "data interpretation, and the application of epidemiological principles. The question should be at a level "
-        "appropriate for high school students in a Science Olympiad competition."
-        " The correct answer should be included at the end of the response in the format 'Correct Answer: [A/B/C/D]'."
+        "Generate a difficult multiple choice question on epidemiology and disease detection, focusing on outbreak investigation, "
+        "data interpretation, and the application of epidemiological principles. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
     )
 }
 
@@ -94,22 +122,16 @@ async def generate_quiz(request: QuizRequest):
                 {"role": "system", "content": "You are a quiz generator."},
                 {"role": "user", "content": f"{prompt}\nType: Multiple Choice"},
             ],
-            max_tokens=150
+            max_tokens=200  # Increase max tokens to accommodate explanation
         )
         question_content = response['choices'][0]['message']['content'].strip()
 
-        # Remove any part of the text that could contain an answer or explanation
-        possible_clues = ["Correct Answer:", "Answer:", "Explanation:", "Correct:",
-                          "Explanation", "answer is", "Correct choice", "Answer is", "The correct"]
-        for clue in possible_clues:
-            question_content = re.split(clue, question_content)[0]
+        # Extract the correct answer and explanation in the specified format
+        correct_answer, explanation = extract_correct_answer_and_explanation(
+            question_content)
 
         # Assuming that options are in the format A), B), C), D)
         options = extract_options(question_content)
-
-        # Extract the correct answer (assuming GPT-3 usually places it at the end)
-        correct_answer = extract_correct_answer(
-            response['choices'][0]['message']['content'])
 
         question_body = re.split(r'\n', question_content)[
             0].strip()  # Extract the question part
@@ -118,7 +140,8 @@ async def generate_quiz(request: QuizRequest):
             "type": "multiple_choice",
             "question": question_body,
             "options": options,
-            "correctAnswer": correct_answer
+            "correctAnswer": correct_answer,
+            "explanation": explanation
         })
 
     # Generate short response questions
@@ -129,7 +152,7 @@ async def generate_quiz(request: QuizRequest):
                 {"role": "system", "content": "You are a quiz generator."},
                 {"role": "user", "content": f"{prompt}\nType: Short Response"},
             ],
-            max_tokens=150
+            max_tokens=200
         )
         quiz.append({
             "type": "short_response",
@@ -148,9 +171,14 @@ def extract_options(content: str) -> list:
     return options
 
 
-def extract_correct_answer(content: str) -> str:
-    # Use a pattern to find the correct answer assuming the format is "Correct Answer: X"
-    match = re.search(r'Correct Answer:\s*([ABCD])', content)
-    if match:
-        return match.group(1)
-    return ""
+def extract_correct_answer_and_explanation(content: str) -> tuple:
+    # Extract correct answer and explanation using specific markers
+    correct_answer_match = re.search(r'Correct answer:\s*([ABCD])', content)
+    explanation_match = re.search(r'Explanation:\s*(.*)', content)
+
+    correct_answer = correct_answer_match.group(
+        1).strip() if correct_answer_match else ""
+    explanation = explanation_match.group(
+        1).strip() if explanation_match else ""
+
+    return correct_answer, explanation

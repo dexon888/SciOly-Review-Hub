@@ -1,31 +1,23 @@
 <div *ngIf="quiz">
-    <h2>{{ topic }}</h2>
-    <div *ngFor="let item of quiz; let i = index" class="question-card">
-        <p>{{ item.question }}</p>
-
-        <!-- Multiple Choice Questions -->
-        <div *ngIf="item.type === 'multiple_choice' && item.options">
+    <h2>{{ topic }} Quiz</h2>
+    <div *ngFor="let item of quiz; let i = index">
+        <div>
+            <p><strong>Question:</strong> {{ item.question }}</p>
             <div *ngFor="let option of item.options">
-                <label
-                    [ngClass]="{'correct': isSubmitted && option === item.correctAnswer, 'incorrect': isSubmitted && option === item.selectedOption && option !== item.correctAnswer}">
-                    <input type="radio" name="question{{i}}" [(ngModel)]="item.selectedOption" [value]="option">
-                    {{ option }}
+                <label>
+                    <input type="radio" [value]="option.charAt(0)" [(ngModel)]="item.selectedOption"
+                        [disabled]="isSubmitted" (change)="selectAnswer(i, option.charAt(0))" />
+                    <span [ngClass]="getAnswerClass(i, option.charAt(0))">
+                        {{ option }}
+                    </span>
                 </label>
             </div>
-        </div>
-
-        <!-- Short Response Questions -->
-        <div *ngIf="item.type === 'short_response'">
-            <input type="text" [(ngModel)]="item.answer" placeholder="Your answer here">
-        </div>
-
-        <!-- Feedback after submission -->
-        <div *ngIf="isSubmitted && item.type === 'multiple_choice'">
-            <p [ngClass]="{'correct': item.isCorrect, 'incorrect': !item.isCorrect}">
-                {{ item.isCorrect ? 'Correct!' : 'Incorrect. The correct answer is ' + item.correctAnswer }}
-            </p>
+            <div *ngIf="isSubmitted">
+                <p *ngIf="item.isCorrect">Correct!</p>
+                <p *ngIf="!item.isCorrect">Incorrect. The correct answer is {{ item.correctAnswer }}</p>
+                <p *ngIf="item.explanation"><strong>Explanation:</strong> {{ item.explanation }}</p>
+            </div>
         </div>
     </div>
-
-    <button (click)="submitQuiz()">Submit Quiz</button>
+    <button (click)="submitQuiz()" [disabled]="isSubmitted">Submit Quiz</button>
 </div>
