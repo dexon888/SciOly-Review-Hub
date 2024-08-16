@@ -1,8 +1,37 @@
-from fastapi import FastAPI, HTTPException
 import openai
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 
+# Set your OpenAI API key here
+openai.api_key = "sk-vxlkECiV8zupsDGNpMaplu4iEss_LWoqzTL5l4-WgeT3BlbkFJg1EoanQ-Qp2yL49f36T96XT2geSk6yHXGNRuRMowcA"
+
+# Define the CORS policy
+origins = [
+    "http://localhost:4200",  # Angular development server
+    "http://127.0.0.1:4200"   # Alternative localhost
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow specific origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
+
+# Define the request model
+
+
+class QuizRequest(BaseModel):
+    topic: str
+    mcqCount: int
+    srqCount: int
+
+
+# Define the topics and prompts
 topics = {
     "anatomy-physiology": "Generate a multiple choice question about human anatomy and physiology.",
     "fossils": "Generate a multiple choice question about fossils.",
@@ -18,27 +47,35 @@ def read_root():
 
 
 @app.post("/generate-quiz")
-async def generate_quiz(topic: str, mcqCount: int, srqCount: int):
-    if topic not in topics:
+async def generate_quiz(request: QuizRequest):
+    if request.topic not in topics:
         raise HTTPException(status_code=400, detail="Invalid topic")
 
     quiz = []
-    prompt = topics[topic]
+    prompt = topics[request.topic]
 
-    for _ in range(mcqCount):
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=f"{prompt}\nType: Multiple Choice",
+    # Generate multiple choice questions
+    for _ in range(request.mcqCount):
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a quiz generator."},
+                {"role": "user", "content": f"{prompt}\nType: Multiple Choice"},
+            ],
             max_tokens=100
         )
-        quiz.append(response.choices[0].text)
+        quiz.append(response['choices'][0]['message']['content'].strip())
 
-    for _ in range(srqCount):
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=f"{prompt}\nType: Short Response",
+    # Generate short response questions
+    for _ in range(request.srqCount):
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a quiz generator."},
+                {"role": "user", "content": f"{prompt}\nType: Short Response"},
+            ],
             max_tokens=100
         )
-        quiz.append(response.choices[0].text)
+        quiz.append(response['choices'][0]['message']['content'].strip())
 
     return {"quiz": quiz}

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { ApiService } from '../api.service';
 
 @Component({
@@ -41,6 +41,7 @@ export class QuestionGeneratorComponent implements OnInit {
     if (this.topic) {
       this.apiService.generateQuiz(this.topic, this.mcqCount, this.srqCount).subscribe(
         (response: any) => {
+          console.log('Generated Quiz:', response.quiz);  // Log the quiz data to the console
           this.router.navigate(['/quiz-display'], { state: { quiz: response.quiz } });
         },
         (error: any) => {
@@ -48,5 +49,6 @@ export class QuestionGeneratorComponent implements OnInit {
         }
       );
     }
-  }
+}
+
 }

@@ -1,6 +1,9 @@
 <div *ngIf="quiz">
-    <h2>Quiz</h2>
-    <div *ngFor="let question of quiz">
-        <p>{{ question }}</p>
-    </div>
+    <h2>Generated Quiz</h2>
+    <ul>
+        <li *ngFor="let question of quiz">{{ question }}</li>
+    </ul>
+</div>
+<div *ngIf="!quiz">
+    <p>No quiz data available.</p>
 </div>
