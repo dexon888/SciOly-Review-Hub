@@ -1,9 +1,9 @@
 <div *ngFor="let item of quiz">
-    <div *ngIf="item.type === 'multiple_choice'">
+    <div class="question-card" *ngIf="item.type === 'multiple_choice'">
         <p>{{ item.question }}</p>
         <!-- You can add more specific HTML for MCQ options here -->
     </div>
-    <div *ngIf="item.type === 'short_response'">
+    <div class="question-card" *ngIf="item.type === 'short_response'">
         <p>{{ item.question }}</p>
         <input type="text" placeholder="Your answer here">
     </div>
