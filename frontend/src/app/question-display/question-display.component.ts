@@ -8,9 +8,11 @@ interface QuizItem {
   question: string;
   options?: string[];  // Array of options for multiple-choice questions
   selectedOption?: string;  // To store the selected answer
+  correctAnswer?: string;  // To store the correct answer
   explanationRequired?: boolean;  // Flag if explanation is needed
   explanation?: string;  // For storing the user's explanation
   answer?: string;  // For short response questions
+  isCorrect?: boolean;  // To store if the selected option is correct or not
 }
 
 
@@ -41,7 +43,15 @@ export class QuestionDisplayComponent implements OnInit {
   ngOnInit(): void {}
 
   submitQuiz(): void {
+  if (this.quiz) {
+    this.quiz.forEach((item) => {
+      if (item.type === 'multiple_choice' && item.selectedOption && item.correctAnswer) {
+        item.isCorrect = item.selectedOption === item.correctAnswer;
+      }
+    });
     console.log('Submitted Quiz:', this.quiz);
-    // Add logic to handle quiz submission, like sending data to the backend
+    // Handle further logic, like sending results to the backend or displaying them to the user
   }
+}
+
 }

@@ -4,6 +4,7 @@ import openai
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -95,16 +96,17 @@ async def generate_quiz(request: QuizRequest):
         # Remove any part of the text that could contain an answer or explanation
         possible_clues = ["Correct Answer:", "Answer:", "Explanation:", "Correct:",
                           "Explanation", "answer is", "Correct choice", "Answer is", "The correct"]
-
         for clue in possible_clues:
-            question_content = question_content.split(clue)[0]
+            question_content = re.split(clue, question_content)[0]
 
         # Assuming that options are in the format A), B), C), D)
         options = extract_options(question_content)
+        question_body = re.split(r'(\n|$)', question_content)[
+            0].strip()  # Extract the question part
 
         quiz.append({
             "type": "multiple_choice",
-            "question": question_content.strip(),
+            "question": question_body,
             "options": options
         })
 
@@ -126,11 +128,10 @@ async def generate_quiz(request: QuizRequest):
     return {"quiz": quiz}
 
 
-
 def extract_options(content: str) -> list:
-    # Assuming options are in the format A) B) C) D)
+    # Assuming options are in the format A) ... B) ... C) ... D)
     options = []
-    for line in content.splitlines():
-        if line.strip() and line[0] in 'ABCD':
-            options.append(line.strip())
+    pattern = re.compile(r'[ABCD]\)\s.*')
+    for match in pattern.findall(content):
+        options.append(match.strip())
     return options

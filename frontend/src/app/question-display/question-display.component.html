@@ -1,26 +1,31 @@
-<div class="quiz-container">
-    <h1>{{ topic }} Quiz</h1>
+<div *ngIf="quiz">
+    <h2>{{ topic }}</h2>
+    <div *ngFor="let item of quiz; let i = index" class="question-card">
+        <p>{{ item.question }}</p>
 
-    <div *ngFor="let item of quiz" class="question-card">
-        <div *ngIf="item.type === 'multiple_choice'">
-            <p>{{ item.question }}</p>
+        <!-- Multiple Choice Questions -->
+        <div *ngIf="item.type === 'multiple_choice' && item.options">
             <div *ngFor="let option of item.options">
-                <label>
-                    <input type="radio" name="mcq-{{item.question}}" [(ngModel)]="item.selectedOption" [value]="option">
+                <label [ngClass]="{'correct': item.isCorrect && option === item.correctAnswer, 
+                          'incorrect': !item.isCorrect && option === item.selectedOption}">
+                    <input type="radio" name="question{{i}}" [(ngModel)]="item.selectedOption" [value]="option">
                     {{ option }}
                 </label>
             </div>
-            <div *ngIf="item.explanationRequired">
-                <label for="explanation-{{item.question}}">Provide a brief explanation for your choice:</label>
-                <textarea id="explanation-{{item.question}}" [(ngModel)]="item.explanation"></textarea>
-            </div>
         </div>
 
+        <!-- Short Response Questions -->
         <div *ngIf="item.type === 'short_response'">
-            <p>{{ item.question }}</p>
             <input type="text" [(ngModel)]="item.answer" placeholder="Your answer here">
+        </div>
+
+        <!-- Feedback after submission -->
+        <div *ngIf="item.isCorrect !== undefined">
+            <p [ngClass]="{'correct': item.isCorrect, 'incorrect': !item.isCorrect}">
+                {{ item.isCorrect ? 'Correct!' : 'Incorrect. The correct answer is ' + item.correctAnswer }}
+            </p>
         </div>
     </div>
 
-    <button class="submit-btn" (click)="submitQuiz()">Submit Quiz</button>
+    <button (click)="submitQuiz()">Submit Quiz</button>
 </div>
