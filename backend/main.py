@@ -15,10 +15,8 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 app = FastAPI()
 
 # Define the CORS policy
-origins = [
-    "http://localhost:4200",  # Angular development server
-    "http://127.0.0.1:4200"   # Alternative localhost
-]
+origins = os.getenv('ALLOWED_ORIGINS',
+                    "http://localhost:4200,http://127.0.0.1:4200").split(',')
 
 app.add_middleware(
     CORSMiddleware,
