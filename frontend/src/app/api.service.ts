@@ -7,7 +7,7 @@ import { environment } from'../environments/environment'
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl || 'http://127.0.0.1:8000';  // Replace with your FastAPI backend URL
 
   constructor(private http: HttpClient) { }
 
