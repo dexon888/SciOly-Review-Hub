@@ -1,1 +1,1 @@
-{"version":2,"builds":[{"src":"src/index.html","use":"@vercel/static-build","config":{"distDir":"dist/frontend"}}],"rewrites":[{"source":"/api/(.*)","destination":"https://sci-oly-review-hub-backend.vercel.app/"},{"source":"/(.*)","destination":"/index.html"}]}
+{"version":2,"builds":[{"src":"package.json","use":"@vercel/static-build","config":{"distDir":"dist/frontend/browser"}}],"rewrites":[{"source":"/api/(.*)","destination":"https://sci-oly-review-hub-backend.vercel.app/"}]}
