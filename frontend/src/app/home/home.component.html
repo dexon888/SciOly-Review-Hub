@@ -1,18 +1,29 @@
-<div class="container">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>Science Olympiad Study Events</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div class="event-buttons">
-                <button mat-raised-button color="primary"
-                    (click)="navigateToQuiz('anatomy-physiology')">Anatomy/Physiology</button>
-                <button mat-raised-button color="primary" (click)="navigateToQuiz('fossils')">Fossils</button>
-                <button mat-raised-button color="primary" (click)="navigateToQuiz('forestry')">Forestry</button>
-                <button mat-raised-button color="primary" (click)="navigateToQuiz('astronomy')">Astronomy</button>
-                <button mat-raised-button color="primary" (click)="navigateToQuiz('disease-detectives')">Disease
-                    Detectives</button>
-            </div>
-        </mat-card-content>
-    </mat-card>
+<div class="animated-background">
+    <div class="container">
+        <mat-card>
+            <mat-card-header>
+                <img src="assets/olympics.png" alt="Olympics Logo" class="logo" />
+                <mat-card-title>Science Olympiad Study Events</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="event-buttons">
+                    <button mat-raised-button color="primary" (click)="navigateToQuiz('anatomy-physiology')">
+                        🧠 Anatomy/Physiology
+                    </button>
+                    <button mat-raised-button color="primary" (click)="navigateToQuiz('fossils')">
+                        🦖 Fossils
+                    </button>
+                    <button mat-raised-button color="primary" (click)="navigateToQuiz('forestry')">
+                        🌲 Forestry
+                    </button>
+                    <button mat-raised-button color="primary" (click)="navigateToQuiz('astronomy')">
+                        🌌 Astronomy
+                    </button>
+                    <button mat-raised-button color="primary" (click)="navigateToQuiz('disease-detectives')">
+                        🕵️‍♂️ Disease Detectives
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>
