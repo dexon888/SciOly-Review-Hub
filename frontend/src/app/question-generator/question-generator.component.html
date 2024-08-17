@@ -1,20 +1,24 @@
-<div class="container" *ngIf="topic">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>Generate a Quiz for {{ topic }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <form (ngSubmit)="generateQuiz()">
-                <mat-form-field appearance="fill">
-                    <mat-label>Number of Multiple Choice Questions</mat-label>
-                    <input matInput type="number" [(ngModel)]="mcqCount" name="mcqCount" required>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>Number of Short Response Questions</mat-label>
-                    <input matInput type="number" [(ngModel)]="srqCount" name="srqCount" required>
-                </mat-form-field>
-                <button mat-raised-button color="primary" type="submit">Generate Quiz</button>
-            </form>
-        </mat-card-content>
-    </mat-card>
+<div class="animated-background">
+    <div class="container" *ngIf="topic">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Generate a Quiz for {{ topic }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <form (ngSubmit)="generateQuiz()">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Number of Multiple Choice Questions</mat-label>
+                        <input matInput type="number" [(ngModel)]="mcqCount" name="mcqCount" required>
+                        <mat-error *ngIf="mcqCount < 0">Please enter a valid number.</mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Number of Short Response Questions</mat-label>
+                        <input matInput type="number" [(ngModel)]="srqCount" name="srqCount" required>
+                        <mat-error *ngIf="srqCount < 0">Please enter a valid number.</mat-error>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" type="submit">Generate Quiz</button>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>

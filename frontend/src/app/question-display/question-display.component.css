@@ -1,57 +1,51 @@
+/* Animated background gradient */
+.animated-background {
+    background: linear-gradient(-45deg, #1e3c72, #2a5298, #6e45e2, #88d3ce);
+    background-size: 400%400%;
+    animation: gradientBG 15s ease infinite;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
 /* Container for the entire quiz */
 .quiz-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 08px16pxrgba(0, 0, 0, 0.2);
+    z-index: 2;
 }
 
 /* Header styles */
 .quiz-header {
     text-align: center;
     margin-bottom: 30px;
-}
-
-.quiz-header h1 {
-    font-size: 36px;
-    color: #4a90e2;
-    margin-bottom: 10px;
-}
-
-.quiz-header h3 {
-    font-size: 24px;
-    color: #333;
-    margin-top: 0;
+    font-size: 2rem;
+    color: #ffffff;
+    text-shadow: 2px2px4pxrgba(0, 0, 0, 0.6);
 }
 
 /* Style for the container holding the questions */
 .question-card {
-    margin: 20px 0;
+    margin: 20px0;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 04px8pxrgba(0, 0, 0, 0.2);
     background-color: #f9f9f9;
 }
 
 /* Style for the question text */
-.question-card p {
-    font-size: 18px;
+.question-cardp {
+    font-size: 1.2rem;
     font-weight: 500;
     color: #333;
     margin-bottom: 10px;
-}
-
-/* Style for the input field in short response questions */
-.question-card input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-    margin-bottom: 20px;
 }
 
 /* Button styling */
@@ -59,19 +53,22 @@
     display: block;
     width: 100%;
     padding: 10px;
-    font-size: 18px;
+    font-size: 1.1rem;
     color: #fff;
-    background-color: #4a90e2;
+    background-color: #007bff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
     margin-top: 30px;
 }
 
 .submit-btn:hover {
-    background-color: #357ABD;
+    transform: scale(1.05);
+    background-color: #0056b3;
 }
 
+/* Correct and incorrect answer styling */
 .correct {
     color: green;
     font-weight: bold;
@@ -80,4 +77,19 @@
 .incorrect {
     color: red;
     font-weight: bold;
+}
+
+/* Background animation */
+@keyframes gradientBG {
+    0% {
+        background-position: 0%50%;
+    }
+
+    50% {
+        background-position: 100%50%;
+    }
+
+    100% {
+        background-position: 0%50%;
+    }
 }

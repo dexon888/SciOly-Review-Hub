@@ -1,14 +1,74 @@
+/* Animated background gradient */
+.animated-background {
+    background: linear-gradient(-45deg, #1e3c72, #2a5298, #6e45e2, #88d3ce);
+    background-size: 400%400%;
+    animation: gradientBG 15s ease infinite;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Existing styles */
 .container {
     display: flex;
     justify-content: center;
     margin-top: 50px;
+    position: relative;
+    z-index: 2;
 }
 
 mat-card {
     width: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 08px16pxrgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    transition: box-shadow 0.3s ease;
+}
+
+mat-card:hover {
+    box-shadow: 012px24pxrgba(0, 0, 0, 0.3);
+}
+
+mat-card-header {
+    background-color: #34495e;
+    padding: 10px;
+    border-radius: 10px10px00;
+}
+
+mat-card-title {
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
 }
 
 mat-form-field {
     width: 100%;
     margin-bottom: 20px;
+}
+
+button.mat-raised-button {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    width: 100%;
+}
+
+button.mat-raised-button:hover {
+    transform: scale(1.05);
+    background-color: #007bff;
+}
+
+/* Background animation */
+@keyframes gradientBG {
+    0% {
+        background-position: 0%50%;
+    }
+
+    50% {
+        background-position: 100%50%;
+    }
+
+    100% {
+        background-position: 0%50%;
+    }
 }
