@@ -2,22 +2,24 @@
     <h2>{{ topic }} Quiz</h2>
     <div *ngFor="let item of quiz; let i = index">
         <div>
-            <p><strong>Question:</strong> {{ item.question }}</p>
-            <div *ngFor="let option of item.options">
-                <label>
-                    <input type="radio" [value]="option.charAt(0)" [(ngModel)]="item.selectedOption"
-                        [disabled]="isSubmitted" (change)="selectAnswer(i, option.charAt(0))" />
+            <p><strong>Question {{ i + 1 }}:</strong> {{ item.question }}</p>
+            <div *ngFor="let option of item.options; let j = index"><label><input type="radio" [name]="'question' + i"
+                    [value]="option.charAt(0)"
+                    [(ngModel)]="item.selectedOption"
+                    [disabled]="isSubmitted"
+                    (change)="selectAnswer(i, option.charAt(0))"
+                    />
                     <span [ngClass]="getAnswerClass(i, option.charAt(0))">
                         {{ option }}
-                    </span>
-                </label>
-            </div>
+                    </span></label></div>
             <div *ngIf="isSubmitted">
                 <p *ngIf="item.isCorrect">Correct!</p>
-                <p *ngIf="!item.isCorrect">Incorrect. The correct answer is {{ item.correctAnswer }}</p>
-                <p *ngIf="item.explanation"><strong>Explanation:</strong> {{ item.explanation }}</p>
+                <p *ngIf="!item.isCorrect">
+                    Incorrect. The correct answer is <strong>{{ item.correctAnswer }}</strong>.
+                </p>
+                <p *ngIf="item.explanation"><strong>Explanation:</strong> {{ item.explanation }}
+                </p>
             </div>
         </div>
-    </div>
-    <button (click)="submitQuiz()" [disabled]="isSubmitted">Submit Quiz</button>
+    </div><button (click)="submitQuiz()" [disabled]="isSubmitted">Submit Quiz</button>
 </div>
