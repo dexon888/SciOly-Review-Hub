@@ -19,6 +19,7 @@
     height: 100%;
     overflow: hidden;
     pointer-events: none;
+    z-index: 1;
 }
 
 .floating-icon {
@@ -63,8 +64,9 @@
 /* Existing styles */
 .container {
     display: flex;
-    justify-content: center;
-    margin-top: 50px;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 150px; /* Adjusted to move the card further down */
 }
 
 .event-buttons {
@@ -110,7 +112,7 @@ button.mat-raised-button:hover {
     animation-delay: 0.8s;
 }
 
-.event-buttons button:nth-child(5) {
+event-buttons button:nth-child(5) {
     animation-delay: 1s;
 }
 
@@ -126,13 +128,69 @@ button.mat-raised-button:hover {
     }
 }
 
-/* Styling for the Olympics logo */
-.logo {
-    display: block;
-    margin: 0 auto 20px auto;
-    /* Center the logo and add some space below it */
-    max-width: 150px;
-    /* Set the maximum width */
+/* Olympics Logo SVG Animation */
+.olympics-logo {
+    width: 300px;
     height: auto;
-    /* Maintain aspect ratio */
+    stroke-width: 4;
+    fill: none;
+    position: absolute;
+    top: 10%;
+    /* Slightly moved down to reduce gap with title */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.9;
+    z-index: 2;
+    /* Ensure logo is above floating icons but below title */
+}
+
+.ring {
+    stroke-dasharray: 126; /* Updated for larger circles */
+    stroke-dashoffset: 126;
+    animation: trace 2s ease forwards;
+}
+
+/* Olympic Ring Colors */
+.ring.blue {
+    stroke: #0085C7;
+}
+
+.ring.yellow {
+    stroke: #FFD100;
+}
+
+.ring.black {
+    stroke: #000000;
+}
+
+.ring.green {
+    stroke: #008748;
+}
+
+.ring.red {
+    stroke: #DF0024;
+}
+
+@keyframes trace {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Custom Title Styling */
+.custom-title {
+    font-size: 2.5rem;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+    margin-top: 0;
+    /* Reduced margin to minimize gap */
+    z-index: 3;
+    /* Ensure title is above everything else */
+    position: relative;
+}
+
+/* Fix for SVG being cut off */
+svg {
+    overflow: visible;
 }
