@@ -50,8 +50,7 @@ The Science Olympiad Review Hub is a web-based application designed to help stud
     cd frontend
     npm install
 
-    To run the frontend locally:
-    ```bash
+    #To run the frontend locally:
     ng serve
 
 3. **Backend Setup:**
@@ -61,8 +60,7 @@ The Science Olympiad Review Hub is a web-based application designed to help stud
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
     pip install -r requirements.txt
 
-    To run the backend locally:
-    ```bash
+    #To run the backend locally:
     uvicorn main:app --reload
 
 4. **Environment Variables**
