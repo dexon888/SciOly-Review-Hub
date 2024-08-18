@@ -20,11 +20,13 @@ origins = os.getenv('ALLOWED_ORIGINS',
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allow specific origins
+    # Allow all origins for testing, replace with specific origins later
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
 )
+
 
 # Define the request model
 
@@ -95,7 +97,74 @@ topics = {
         "D) <option D>\n"
         "Correct answer: <correct option letter>\n"
         "Explanation: <brief explanation>"
-    )
+    ),
+    "chemistry-lab": (
+        "Generate a challenging, high-school level multiple choice question "
+        "focused on the scientific processes of chemistry, particularly in the areas of Periodicity and Equilibrium. "
+        "Questions may involve tasks like equilibrium reactions, periodic trends, titration calculations, "
+        "molecular structure, and related chemical principles. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
+    ),
+    "dynamic-planet": (
+        "Generate a challenging, high-school level multiple choice question "
+        "focused on the large-scale processes affecting Earth's crust structure, including plate tectonics, "
+        "earthquakes, and volcanoes. Questions should explore topics like the structure of Earth's interior, "
+        "magma composition, geologic history, and the impact of plate movements on global and environmental changes. "
+        "Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
+    ),
+    "ecology": (
+        "Generate a challenging, high-school level multiple choice question "
+        "focused on the principles of ecology, adaptations in biomes, and human impact on ecosystems. "
+        "Topics should include food webs, nutrient cycling, population dynamics, biodiversity, "
+        "climate change, and conservation biology. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
+    ),
+    "microbe-mission": (
+        "Generate a challenging, high-school level multiple choice question "
+        "focused on microbiology topics, including microbial structure and function, "
+        "bacterial growth, antibiotic resistance, and the roles of microbes in industry and ecology. "
+        "Questions may involve topics such as bacterial cell structures, growth conditions, genetic regulation, "
+        "and microbial interactions. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
+    ),
+    "optics": (
+        "Generate a challenging, high-school level multiple choice question "
+        "focused on the principles of optics, including reflection, refraction, mirrors and lenses, color theory, "
+        "and the structure and function of the human eye. Questions should also cover advanced topics such as "
+        "Snell's law, critical angle, polarization, and lasers. Format the response as follows:\n\n"
+        "Question: <question text>\n"
+        "A) <option A>\n"
+        "B) <option B>\n"
+        "C) <option C>\n"
+        "D) <option D>\n"
+        "Correct answer: <correct option letter>\n"
+        "Explanation: <brief explanation>"
+    ),
 }
 
 
