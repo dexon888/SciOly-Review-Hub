@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';  // Import FormsModule for two-way binding
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http'; // Import HttpClient for API requests
+import { environment } from '../../environments/environment';
 
 interface QuizItem {
   type: string;
   question: string;
-  options?: string[];  // Array of options for multiple-choice questions
-  selectedOption?: string;  // To store the selected answer
-  correctAnswer?: string;  // The correct answer for the question
-  isCorrect?: boolean;  // To indicate if the selected answer is correct
-  explanation?: string;  // To store the explanation
+  options?: string[];
+  selectedOption?: string;
+  userResponse?: string; // For storing the user's short response answer
+  correctAnswer?: string;
+  isCorrect?: boolean;
+  explanation?: string;
+  gradingResult?: string; // To store the result for short response grading
 }
 
 @Component({
@@ -18,14 +22,15 @@ interface QuizItem {
   standalone: true,
   templateUrl: './question-display.component.html',
   styleUrls: ['./question-display.component.css'],
-  imports: [CommonModule, FormsModule]  // Ensure FormsModule is included
+  imports: [CommonModule, FormsModule],
 })
 export class QuestionDisplayComponent implements OnInit {
   quiz: QuizItem[] | null = null;
   topic: string | null = null;
   isSubmitted: boolean = false;
+  apiUrl = environment.apiUrl
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) { // Inject HttpClient
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       this.quiz = navigation.extras?.state?.['quiz'] || null;
@@ -38,7 +43,7 @@ export class QuestionDisplayComponent implements OnInit {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   submitQuiz(): void {
     this.isSubmitted = true;
@@ -46,6 +51,8 @@ export class QuestionDisplayComponent implements OnInit {
       this.quiz.forEach((item) => {
         if (item.type === 'multiple_choice') {
           item.isCorrect = item.selectedOption === item.correctAnswer;
+        } else if (item.type === 'short_response') {
+          this.gradeShortResponse(item); // Grade short response questions
         }
       });
     }
@@ -70,5 +77,16 @@ export class QuestionDisplayComponent implements OnInit {
       return 'incorrect';
     }
     return '';
+  }
+
+  gradeShortResponse(item: QuizItem): void {
+    const payload = {
+      user_response: item.userResponse || '',
+      correct_answer: item.correctAnswer || ''
+    };
+
+    this.http.post<any>(`${this.apiUrl}/grade-short-response`, payload).subscribe(response => {
+      item.gradingResult = response.result;
+    });
   }
 }

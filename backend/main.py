@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import re
+from difflib import SequenceMatcher
 
 # Load environment variables from .env file
 load_dotenv()
@@ -35,6 +36,11 @@ class QuizRequest(BaseModel):
     topic: str
     mcqCount: int
     srqCount: int
+
+
+class ShortResponseRequest(BaseModel):
+    user_response: str
+    correct_answer: str
 
 
 # Define the topics and tailored prompts for Science Olympiad events
@@ -221,12 +227,51 @@ async def generate_quiz(request: QuizRequest):
             ],
             max_tokens=200
         )
+        short_response_content = response['choices'][0]['message']['content'].strip(
+        )
+
+        # Extract the question and correct answer (assuming it's given in the same response)
+        # You may need to modify the prompt to ensure the correct answer is provided in the output
+        question = short_response_content.split("Correct answer:")[0].strip()
+        correct_answer = short_response_content.split("Correct answer:")[
+            1].strip()
+
         quiz.append({
             "type": "short_response",
-            "question": response['choices'][0]['message']['content'].strip()
+            "question": question,
+            "correctAnswer": correct_answer
         })
 
     return {"quiz": quiz}
+
+
+@app.post("/grade-short-response")
+async def grade_short_response(request: ShortResponseRequest):
+    try:
+        # Use OpenAI to generate a similarity score or use a simple string matching technique
+        similarity_score = SequenceMatcher(
+            None, request.user_response, request.correct_answer).ratio()
+
+        # Convert the similarity score to a percentage
+        similarity_percentage = round(similarity_score * 100, 2)
+
+        # Determine grading based on similarity score
+        if similarity_percentage > 80:
+            result = "Correct"
+        elif similarity_percentage > 50:
+            result = "Partial Credit"
+        else:
+            result = "Incorrect"
+
+        return {
+            "user_response": request.user_response,
+            "correct_answer": request.correct_answer,
+            "similarity_percentage": similarity_percentage,
+            "result": result
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 def extract_options(content: str) -> list:
